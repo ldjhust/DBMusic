@@ -1,0 +1,33 @@
+PODS:
+  - AFSoundManager (1.2.5)
+  - Alamofire (2.0.2)
+  - JVFloatingDrawer (0.1.0)
+  - KVNProgress (2.2.1)
+  - ReachabilitySwift (2.0)
+  - SDWebImage (3.7.3):
+    - SDWebImage/Core (= 3.7.3)
+  - SDWebImage/Core (3.7.3)
+  - SVProgressHUD (1.1.3)
+  - SwiftyJSON (2.3.0)
+
+DEPENDENCIES:
+  - AFSoundManager (= 1.2.5)
+  - Alamofire (= 2.0.2)
+  - JVFloatingDrawer (~> 0.1.0)
+  - KVNProgress (= 2.2.1)
+  - ReachabilitySwift (= 2.0)
+  - SDWebImage (= 3.7.3)
+  - SVProgressHUD (= 1.1.3)
+  - SwiftyJSON (= 2.3.0)
+
+SPEC CHECKSUMS:
+  AFSoundManager: 06d615614be4caeee03a23812db65d4a8075b47f
+  Alamofire: 8edbab00802a752bb5240cc2abe70e7e881488ad
+  JVFloatingDrawer: 4782b1df21411aef2c1818f3b346cace02cc2e24
+  KVNProgress: 7001d2d16a2755cee5599e8e485befe056f2197b
+  ReachabilitySwift: 227b98ae7ec99e1c01148b17fb22357aa91a5675
+  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
+  SwiftyJSON: 8d6b61a70277ef2a5d710d372e06e7e2d87fb9e4
+
+COCOAPODS: 0.39.0.beta.4

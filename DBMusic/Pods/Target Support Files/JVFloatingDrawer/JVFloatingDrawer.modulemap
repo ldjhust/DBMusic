@@ -1,0 +1,6 @@
+framework module JVFloatingDrawer {
+  umbrella header "JVFloatingDrawer-umbrella.h"
+
+  export *
+  module * { export * }
+}
