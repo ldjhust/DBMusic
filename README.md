@@ -5,4 +5,4 @@
 
 主界面:
 
-![DBMusic](https://github.com/ldjhust/DBMusic/blob/master/DBMusic.png)
+![DBMusic](https://github.com/ldjhust/DBMusic/blob/master/DBMusic.png "DBMusic")
