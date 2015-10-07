@@ -21,7 +21,7 @@ protocol LoveSongDelegate {
   func isAlreadyLoved(song: SongList) -> Bool
 }
 
-class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelegate {
+class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelegate, AFSoundManagerDelegate {
   
   var pcseq: PCSEQVisualizer!
   var delegateLoveSong: LoveSongDelegate?
@@ -50,14 +50,14 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
     }
   }
   var currentChannelId: Int = 0 { // 默认是原声
-   
+    
     didSet {
       self.getSongList() // 获取新的频道的歌曲
     }
   }
   
   // MARK: - View Lifecycle
-
+  
   override func viewDidLoad() {
     
     super.viewDidLoad()
@@ -92,6 +92,9 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
     self.view.addSubview(self.titleView)
     self.view.addSubview(self.bottomView)
     self.view.addSubview(self.pcseq)
+    
+    // 指定AFSoundManager的代理
+    AFSoundManager.sharedManager().delegate = self
     
     // 获取歌曲列表
     
@@ -139,35 +142,39 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
   func playPauseBtn() {
     
     if self.bottomView.playBtn.selected {
-      self.bottomView.playBtn.selected = false
-      
-      AFSoundManager.sharedManager().pause() // 暂停播放
-      
-      self.pcseq.stop() // 停止音乐可视化
-      self.backgroundView.needleRotateStop()
-      self.backgroundView.diskPause()
+      AFSoundManager.sharedManager().pause() // 暂停
     } else {
-      self.bottomView.playBtn.selected = true
-      
-      self.backgroundView.needleRotateStart()
-      self.pcseq.start() // 开启音乐可视化
-      
-      if self.backgroundView.diskFirstRotate {
-        self.backgroundView.diskFirstRotate = false
-        self.backgroundView.diskRotate()
-      } else {
-        self.backgroundView.diskResume()
-        AFSoundManager.sharedManager().resume() // 恢复歌曲
-      }
+      AFSoundManager.sharedManager().resume() // 恢复
     }
+  }
+  
+  func play() {
+    self.bottomView.playBtn.selected = true
+    
+    self.backgroundView.needleRotateStart()
+     self.pcseq.start() // 开启音乐可视化
+    
+    if self.backgroundView.diskFirstRotate {
+      self.backgroundView.diskFirstRotate = false
+      self.backgroundView.diskRotate()
+    } else {
+      self.backgroundView.diskResume()
+    }
+  }
+  
+  func pause() {
+    self.bottomView.playBtn.selected = false
+    self.pcseq.stop() // 停止音乐可视化
+    self.backgroundView.needleRotateStop()
+    self.backgroundView.diskPause()
   }
   
   // 播放下一首歌
   
   func playNextSong() {
     
-    if self.bottomView.playBtn.selected {
-      self.playPauseBtn() // 停止
+    if AFSoundManager.sharedManager().status == AFSoundManagerStatus.Playing.rawValue {
+      AFSoundManager.sharedManager().pause() // 停止播放
     }
     
     self.currentSongIndex += 1 // 下一曲
@@ -202,7 +209,7 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
       sender.selected = true
       let transform = sender.transform
       UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.3, initialSpringVelocity: 1, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-          sender.transform = CGAffineTransformMakeScale(1.1, 1.1)
+        sender.transform = CGAffineTransformMakeScale(1.1, 1.1)
         }) { (finished) in
           sender.transform = transform
       }
@@ -253,7 +260,6 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
     // 设置歌曲的信息
     
     self.setSongInfo(self.songList![self.currentSongIndex])
-    self.playPauseBtn() // 播放动画
     self.songTimePlayed = 0
     self.songStep = 0.0
     
@@ -265,10 +271,9 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
         
         if abs(timeRemain) < 1e-6 && percentage == 100 {
           // 播放完了，接着下一曲
-          self.playPauseBtn() // 暂停动画
+          self.pause() // 暂停动画
           self.playNextSong()
         } else {
-          print (percentage, elapsedTime, timeRemain, finished, separator: ", ")
           
           if timeRemain > 0.0 {
             if Int(elapsedTime + 0.5) == 0 {
@@ -296,11 +301,11 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
   
   func changeChannelId(id: Int) {
     
-    if self.bottomView.playBtn.selected {
-      self.playPauseBtn() // 暂停
+    if AFSoundManager.sharedManager().status == AFSoundManagerStatus.Playing.rawValue {
+      AFSoundManager.sharedManager().pause() // 暂停
     }
     
-    self.resetCurrentSongIndex = false
+    self.resetCurrentSongIndex = true
     
     self.currentChannelId = id
   }
@@ -309,13 +314,24 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
   
   func setLovedSongList(loveSongList: [SongList], index: Int) {
     
-    // 暂停当前队列
-    self.playPauseBtn()
+    if AFSoundManager.sharedManager().status == AFSoundManagerStatus.Playing.rawValue {
+      AFSoundManager.sharedManager().pause() // 暂停
+    }
     
     self.resetCurrentSongIndex = false
     self.currentSongIndex = index
-    self.songList = loveSongList.map {
-      SongList(URLString: $0.songURLString, thumbImage: $0.thumbImage, sid: $0.sid, title: $0.title, artitst: $0.artitst)
+    self.songList = loveSongList
+  }
+  
+  // MARK: - AFSoundManagerDelegate
+  
+  func currentPlayingStatusChanged(status: AFSoundManagerStatus) {
+    
+    switch status {
+    case .Finished, .Paused, .Stopped:
+      self.pause()
+    case .Playing, .Restarted:
+      self.play()
     }
   }
   
@@ -331,4 +347,3 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
     return UIStatusBarStyle.LightContent
   }
 }
-
