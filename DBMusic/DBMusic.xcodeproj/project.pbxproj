@@ -355,6 +355,11 @@
 					6DD482241BBECE0100E3308C = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 6B7V5AG4SP;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					6DD4823B1BBECE0100E3308C = {
 						CreatedOnToolsVersion = 7.0;

@@ -49,6 +49,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   func applicationWillEnterForeground(application: UIApplication) {
+    // 所有动画都会在进入后台时全部瞬间完成，这里重新从头开始动画
+    ((self.window?.rootViewController as! JVFloatingDrawerViewController).centerViewController as! ViewController).backgroundView.diskRotate()
   }
 
   func applicationDidBecomeActive(application: UIApplication) {
