@@ -14,6 +14,8 @@ import JVFloatingDrawer
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
+  var channelId: Int!
+  private var centerViewController: ViewController!
 
   // MARK: - Application Lifecycle
 
@@ -21,6 +23,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
     self.window?.makeKeyAndVisible()
+    
+    let notFirstLanuch = NSUserDefaults.standardUserDefaults().boolForKey("notFirstLanuch")
+    
+    if notFirstLanuch {
+      self.channelId = NSUserDefaults.standardUserDefaults().integerForKey("channelId")
+    } else {
+      NSUserDefaults.standardUserDefaults().setBool(true, forKey: "notFirstLanuch")
+      self.channelId = 0  // 默认频道Id为0
+    }
     
     let drawerViewController = JVFloatingDrawerViewController()
     let centerController = ViewController()
@@ -31,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     rightController.channelDelegate = centerController
     leftController.delegateLoveList = centerController
     
+    self.centerViewController = centerController
     drawerViewController.centerViewController = centerController
     drawerViewController.leftViewController = leftController
     drawerViewController.rightViewController = rightController
@@ -42,24 +54,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     return true
   }
 
-  func applicationWillResignActive(application: UIApplication) {
-  }
-
-  func applicationDidEnterBackground(application: UIApplication) {
-  }
-
   func applicationWillEnterForeground(application: UIApplication) {
     // 所有动画都会在进入后台时全部瞬间完成，这里重新从头开始动画
     ((self.window?.rootViewController as! JVFloatingDrawerViewController).centerViewController as! ViewController).backgroundView.diskRotate()
   }
-
-  func applicationDidBecomeActive(application: UIApplication) {
+  
+  func applicationDidEnterBackground(application: UIApplication) {
+    // 在这里面保存一下频道数据，纺织applicationWillTerminate没有调用
+    self.channelId = self.centerViewController.currentChannelId
+    NSUserDefaults.standardUserDefaults().setInteger(self.channelId, forKey: "channelId")
   }
 
   func applicationWillTerminate(application: UIApplication) {
     
     // 退出应用时保存一下
     self.saveContext()
+    
+    // 保存频道ID
+    self.channelId = self.centerViewController.currentChannelId
+    NSUserDefaults.standardUserDefaults().setInteger(self.channelId, forKey: "channelId")
   }
   
   // MARK: - Core Data stack

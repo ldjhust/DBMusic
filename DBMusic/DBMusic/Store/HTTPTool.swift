@@ -86,7 +86,6 @@ class HTTPTool: NSObject {
   }
   
   func getSongList(channelId: Int, completeHandle: (songs: [SongList]) -> Void) {
-    
     self.getResource("http://www.douban.com/j/app/radio/people?app_name=radio_desktop_win&version=100&channel=\(channelId)&type=n", parameters: nil) { (result) -> Void in
 
       let json = JSON(result)

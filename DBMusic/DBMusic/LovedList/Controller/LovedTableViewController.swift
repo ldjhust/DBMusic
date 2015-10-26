@@ -19,7 +19,6 @@ protocol LovedSongListDelegate {
 }
 
 let cellId = "reuse"
-let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
 class LovedTableViewController: UITableViewController, LoveSongDelegate {
 
@@ -43,10 +42,10 @@ class LovedTableViewController: UITableViewController, LoveSongDelegate {
     
     let fetchRequest = NSFetchRequest()
     
-    fetchRequest.entity = NSEntityDescription.entityForName("LoveSongs", inManagedObjectContext: appDelegate.managedObjectContext)
+    fetchRequest.entity = NSEntityDescription.entityForName("LoveSongs", inManagedObjectContext: mainAppDelegate.managedObjectContext)
     
     do {
-      let results = try appDelegate.managedObjectContext.executeFetchRequest(fetchRequest) as! [LoveSongs]
+      let results = try mainAppDelegate.managedObjectContext.executeFetchRequest(fetchRequest) as! [LoveSongs]
       
       self.lovedSongs = results.map {
         
@@ -133,7 +132,7 @@ class LovedTableViewController: UITableViewController, LoveSongDelegate {
     
     // 插入数据库
     
-    let loveSong = NSEntityDescription.insertNewObjectForEntityForName("LoveSongs", inManagedObjectContext: appDelegate.managedObjectContext) as! LoveSongs
+    let loveSong = NSEntityDescription.insertNewObjectForEntityForName("LoveSongs", inManagedObjectContext: mainAppDelegate.managedObjectContext) as! LoveSongs
     
     loveSong.title = songLocal.title
     loveSong.thumbImage = songLocal.thumbImage
@@ -143,7 +142,7 @@ class LovedTableViewController: UITableViewController, LoveSongDelegate {
     loveSong.artitst = songLocal.artitst
     
     // 保存数据
-    appDelegate.saveContext()
+    mainAppDelegate.saveContext()
   }
   
   func removeLoveSong(song: SongList) {
@@ -170,12 +169,12 @@ class LovedTableViewController: UITableViewController, LoveSongDelegate {
     fetchRequest.predicate = predicate
     
     do {
-      let results = try appDelegate.managedObjectContext.executeFetchRequest(fetchRequest) as! [LoveSongs]
+      let results = try mainAppDelegate.managedObjectContext.executeFetchRequest(fetchRequest) as! [LoveSongs]
       
       // 删除
-      appDelegate.managedObjectContext.deleteObject(results[0])
+      mainAppDelegate.managedObjectContext.deleteObject(results[0])
       
-      appDelegate.saveContext()
+      mainAppDelegate.saveContext()
     } catch {
       SVProgressHUD.showErrorWithStatus("删除失败", maskType: SVProgressHUDMaskType.Black)
     }

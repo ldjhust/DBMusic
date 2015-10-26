@@ -35,6 +35,13 @@ class ChannelListTableViewController: UITableViewController {
       HTTPTool.sharedHTTPTool.getchannelList { (data) -> Void in
         
         self.channelList = data
+        for i in 0 ..< self.channelList.count {
+          // 判断当前选中的是哪一个频道
+          if self.channelList[i].channelId == mainAppDelegate.channelId {
+            self.selectedChannelId = i
+            break
+          }
+        }
         self.tableView.reloadData()
       }
     } else {

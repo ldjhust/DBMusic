@@ -67,7 +67,7 @@
 		6DD482651BBED37A00E3308C /* MyDiskView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyDiskView.swift; sourceTree = "<group>"; };
 		6DD482661BBED37A00E3308C /* MyTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTitleView.swift; sourceTree = "<group>"; };
 		6DD482681BBED37A00E3308C /* HTTPTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPTool.swift; sourceTree = "<group>"; };
-		6DD4826A1BBED37A00E3308C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6DD4826A1BBED37A00E3308C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = SupportFiles/AppDelegate.swift; sourceTree = "<group>"; };
 		6DD4826B1BBED37A00E3308C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6DD4826D1BBED37A00E3308C /* DBMusic.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DBMusic.xcdatamodel; sourceTree = "<group>"; };
 		6DD4826E1BBED37A00E3308C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -141,6 +141,7 @@
 		6DD482271BBECE0100E3308C /* DBMusic */ = {
 			isa = PBXGroup;
 			children = (
+				6DD4826A1BBED37A00E3308C /* AppDelegate.swift */,
 				6D3508531BC23A1600D9B363 /* Other */,
 				6DD482511BBED37A00E3308C /* ChannelList */,
 				6DD482571BBED37A00E3308C /* LovedList */,
@@ -277,7 +278,6 @@
 		6DD482691BBED37A00E3308C /* SupportFiles */ = {
 			isa = PBXGroup;
 			children = (
-				6DD4826A1BBED37A00E3308C /* AppDelegate.swift */,
 				6DD4826B1BBED37A00E3308C /* Assets.xcassets */,
 				6DD4826C1BBED37A00E3308C /* DBMusic.xcdatamodeld */,
 				6DD4826E1BBED37A00E3308C /* Info.plist */,

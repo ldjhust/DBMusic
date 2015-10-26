@@ -21,6 +21,8 @@ protocol LoveSongDelegate {
   func isAlreadyLoved(song: SongList) -> Bool
 }
 
+let mainAppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
 class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelegate, AFSoundManagerDelegate {
   
   var pcseq: PCSEQVisualizer!
@@ -49,8 +51,7 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
       }
     }
   }
-  var currentChannelId: Int = 0 { // 默认是原声
-    
+  var currentChannelId: Int = mainAppDelegate.channelId { // 默认是原声
     didSet {
       self.getSongList() // 获取新的频道的歌曲
     }
@@ -95,9 +96,10 @@ class ViewController: UIViewController, ChannelListDelegate, LovedSongListDelega
     
     // 指定AFSoundManager的代理
     AFSoundManager.sharedManager().delegate = self
-    
+  }
+  
+  override func viewDidAppear(animated: Bool) {
     // 获取歌曲列表
-    
     self.isFetchSongs = true
     self.getSongList()
   }
